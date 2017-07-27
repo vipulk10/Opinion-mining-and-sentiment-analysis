@@ -1,0 +1,12 @@
+<html>
+<head>
+<title>API For WhatArePeopleSaying?</title>
+</head>
+<body>
+{{search_term}}:<br>
+{{neg}},{{neut}},{{pos}}<br>
+{% for a in all_tweets %}
+"{{a[1]}}";"{{a[2]}}""<br>
+{% endfor %}
+</body>
+</html>

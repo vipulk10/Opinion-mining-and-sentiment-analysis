@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Opinion mining ?</title>
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+      <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <script type="text/javascript">
+    <!--http://jsfiddle.net/gh/get/jquery/1.9.1/highslide-software/highcharts.com/tree/master/samples/highcharts/demo/pie-basic/-->
+ $(function () {
+    $('#containerGraph').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        title: {
+            text: 'Twitter Sentiment Analysis'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                    style: {
+                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                    }
+                }
+            }
+        },
+        series: [{
+            type: 'pie',
+            name: 'Tweet Sentiment',
+            data: [
+                ['positive(+)', {{ pos }}],
+                ['negative(-)',  {{ neg }}],
+                ['neutral(|)',  {{ neut }}]
+            ]
+        }]
+    });
+});
+
+
+    </script>
+
+
+  </head>
+  <body>
+{% if ask_graph == 'false' %}
+
+<div class="container-full">
+
+      <div class="row">
+       
+        <div class="col-lg-12 text-center v-center">
+          
+          <h1>Opinion Mining?</h1>
+
+          <p class="lead">A Sentiment Analysis application built on top of Twitter..</p>
+  
+          <p class="lead">Check Twitter, by entering a search word or term.</p>
+          
+          <br>
+          
+          <form id ="searchquery" name="searchquery" class="col-lg-12" action="." method="POST" onsubmit="return validateForm()">
+            <div class="input-group" style="width:340px;text-align:center;margin:0 auto;">
+            <input class="form-control input-lg" title=" SearchQuery" placeholder="Enter a search term:" type="text" name="text">
+            <!--<input type="submit" name="my-form" value="Send">-->
+              <span class="input-group-btn">
+              <button class="btn btn-lg btn-primary" type="submit">Press Enter</button></span>
+            </div>
+          </form>
+        </div>
+        
+      </div> <!-- /row -->
+  
+      <div class="row">
+              <div class="col-lg-12 text-center v-center" style="font-size:19pt;">
+
+          <button id="example1" data-target="#example1" type="button" class="btn btn-default" data-toggle="tooltip" data-placement="bottom" title="A Twitter Sentiment Analyzer that gets 25 Tweets from Twitter, classifies them using a Naive Bayes Classifier and then pushes  the result.">About Project</button>
+        </div>
+      
+      </div>
+
+    <br><br><br><br><br>
+{% endif %}
+</div> <!-- /container full -->
+
+<!--2ND ONE....GRAPH AND VISUALISATION...-->
+{% if ask_graph == 'true' %}
+
+<div class="container">
+
+<!-- For the Graphs-->
+<hr><font color="black">
+<h3>Visualization:</h3>
+<script src="static/js/highcharts.js"></script>
+<script src="static/js/exporting.js"></script>
+
+<div id="containerGraph" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+
+</div>
+
+<div class="container">
+
+    <hr>
+  <p><h3>Sample Tweets:</h3></p>
+    <div class="row">
+{% for a in all_tweets %}
+{% if a[2] == 'negative' %}
+        <div class="col-sm-4">
+          <div class="panel panel-default">
+            <div class="panel-heading"><font color="red"><h3>negative(-)</h3></div>
+            <div class="panel-body">
+            <!--Tweet here-->
+            {{a[1]}}
+            </div>
+          </div>
+        </div></font>
+{% elif a[2] == 'positive' %}
+        <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading"><font color="green"><h3>positive(+)</h3></div>
+            <div class="panel-body">
+            <!--Tweet here-->
+            {{a[1]}}
+            </div>
+          </div>
+        </div></font>
+{% elif a[2] == 'neutral' %}
+        <div class="col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading"><font color="blue"><h3>neutral(|)</h3></div>
+            <div class="panel-body">
+            <!--Tweet here-->
+            {{a[1]}}
+            </div>
+          </div>
+        </div></font>
+{% endif %}
+{% endfor %}
+</div>
+    <div class="col-lg-12 text-center v-center" style="font-size:15pt;"><a href="/">Search Again, Go Back.</a></div>
+
+</div>
+{% endif %} 
+  <script>
+  $('#example1').tooltip();</script>
+<script>
+  function validateForm() {
+    var x = document.forms["searchquery"]["text"].value;
+    if (x == null || x == "" || x.charAt(0) == " ") {
+        alert("Name must be filled out");
+        return false;
+    }
+}
+</script>
+<script src="/static/js/bootstrap.min.js"></script>
+  </body>
+</html>
